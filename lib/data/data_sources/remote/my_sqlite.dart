@@ -1,5 +1,6 @@
 import 'package:blog_app/data/models/user_model.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
@@ -31,7 +32,22 @@ class DataBaseHelper {
 
   Future<int> signup(Users users) async {
     final Database db = await initDB();
-print('Raw query result: ${await db.rawQuery("select * from users")}');
+    print('Raw query result: ${await db.rawQuery("select * from users")}');
     return db.insert('users', users.toMap());
+  }
+
+  Future<void> savedCredentials(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('email', email);
+  prefs.setString('password', password);
+  }
+
+  Future<Map<String, dynamic>?> getSavedCredentials() async {
+    final Database db = await initDB();
+    final List<Map<String, dynamic>> result = await db.query('users');
+    if (result.isNotEmpty) {
+      return result.elementAt(1);
+    }
+    return null;
   }
 }

@@ -11,9 +11,11 @@ sealed class SignInEvent extends Equatable {
 class SignInRequiredEvent extends SignInEvent {
   final String email;
   final String password;
+  final bool rememberMe;
 
-  const SignInRequiredEvent({required this.email, required this.password});
- 
+  const SignInRequiredEvent({
+    required this.email,
+    required this.password,
+    this.rememberMe = false,
+  });
 }
-
-

@@ -8,14 +8,19 @@ part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final DataBaseHelper _dataBaseHelper;
-  SignInBloc(this._dataBaseHelper) : super(SignInInitial()) {
+  SignInBloc({required DataBaseHelper dataBaseHelper})
+      : _dataBaseHelper = dataBaseHelper,
+        super(SignInInitial()) {
     on<SignInRequiredEvent>((event, emit) async {
       emit(SignInProgress());
       try {
         final isSignInSuccessful = await _dataBaseHelper
             .login(Users(email: event.email, password: event.password));
-        if (isSignInSuccessful) {
+        if (isSignInSuccessful == true) {
           emit(SignInSuccess());
+        }
+        if (event.rememberMe) {
+          await _dataBaseHelper.savedCredentials(event.email, event.password);
         } else {
           emit(const SignInFailure("Invalid Email and Password"));
         }

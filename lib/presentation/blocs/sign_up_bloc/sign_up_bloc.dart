@@ -8,7 +8,9 @@ part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   final DataBaseHelper _dataBaseHelper;
-  SignUpBloc(this._dataBaseHelper) : super(SignUpInitial()) {
+  SignUpBloc(DataBaseHelper dataBaseHelper) : 
+  _dataBaseHelper= dataBaseHelper,
+  super(SignUpInitial()) {
     on<SignUpRequired>((event, emit) async {
       emit(SignUpProgress());
       try {

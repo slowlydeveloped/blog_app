@@ -9,12 +9,13 @@ import 'core/constants/my_strings.dart';
 import 'core/themes/app_themes.dart';
 import 'package:flutter/material.dart';
 
-void main()  {
-  runApp(MyApp());
+void main() {
+  runApp(MyApp(dataBaseHelper: DataBaseHelper()));
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  final DataBaseHelper dataBaseHelper;
+  MyApp({super.key, required this.dataBaseHelper});
   final _approuter = AppRouter();
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider<SignInBloc>(
-              create: (_) => SignInBloc(DataBaseHelper()),
+              create: (_) => SignInBloc(dataBaseHelper: dataBaseHelper),
             ),
             BlocProvider<SignUpBloc>(
               create: (_) => SignUpBloc(DataBaseHelper()),
