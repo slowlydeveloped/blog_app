@@ -12,7 +12,7 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool isChecked = false;
+  // bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,19 +97,19 @@ class _LoginState extends State<Login> {
                               },
                             ),
                             10.h.heightBox,
-                            ListTile(
-                              horizontalTitleGap: 2,
-                              title: const Text("Remember me"),
-                              leading: Checkbox(
-                                activeColor: MyColors.primaryColor,
-                                value: isChecked,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isChecked = !isChecked;
-                                  });
-                                },
-                              ),
-                            ),
+                            // ListTile(
+                            //   horizontalTitleGap: 2,
+                            //   title: const Text("Remember me"),
+                            //   leading: Checkbox(
+                            //     activeColor: MyColors.primaryColor,
+                            //     value: isChecked,
+                            //     onChanged: (value) {
+                            //       setState(() {
+                            //         isChecked = !isChecked;
+                            //       });
+                            //     },
+                            //   ),
+                            // ),
                             40.h.heightBox,
                             CommonButton(
                                 title: "Login",
@@ -117,11 +117,14 @@ class _LoginState extends State<Login> {
                                   if (_formKey.currentState!.validate()) {
                                     context.read<SignInBloc>().add(
                                           SignInRequiredEvent(
-                                              email: emailController.text,
-                                              password: passwordController.text,
-                                              rememberMe: isChecked),
+                                            email: emailController.text,
+                                            password: passwordController.text,
+                                            // rememberMe: isChecked
+                                          ),
                                         );
                                   }
+                                  emailController.clear();
+                                  passwordController.clear();
                                 }),
                             20.h.heightBox,
                             "Don’t have an account?"

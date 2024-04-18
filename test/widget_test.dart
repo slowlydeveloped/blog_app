@@ -6,6 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:blog_app/data/data_sources/remote/my_sqlite.dart';
+// import 'package:blog_app/data/repositories/todo_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,7 +15,7 @@ import 'package:blog_app/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget( MyApp(dataBaseHelper: DataBaseHelper(),));
+    await tester.pumpWidget( MyApp(dataBaseHelper: DataBaseHelper()));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

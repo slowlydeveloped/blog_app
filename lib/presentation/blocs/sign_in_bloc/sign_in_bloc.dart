@@ -14,15 +14,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInRequiredEvent>((event, emit) async {
       emit(SignInProgress());
       try {
-        final isSignInSuccessful = await _dataBaseHelper
-            .login(Users(email: event.email, password: event.password));
+        final isSignInSuccessful = await _dataBaseHelper.login(Users(
+          email: event.email,
+          password: event.password,
+        ));
         if (isSignInSuccessful == true) {
           emit(SignInSuccess());
-        }
-        if (event.rememberMe) {
-          await _dataBaseHelper.savedCredentials(event.email, event.password);
-        } else {
-          emit(const SignInFailure("Invalid Email and Password"));
+        } else if (isSignInSuccessful == false) {
+          emit(const SignInFailure("Invalid email or password"));
         }
       } catch (e) {
         emit(SignInFailure("An error occurred $e"));

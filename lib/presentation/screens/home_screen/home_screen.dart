@@ -2,31 +2,64 @@ part of 'home_screen_imports.dart';
 
 @RoutePage()
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? email;
-  String? password;
+  final titleController = TextEditingController();
+  final contentController = TextEditingController();
+  final keywordController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    loadSavedCredentials();
-  }
-
-  Future<void> loadSavedCredentials() async {
-    final dbHelper = DataBaseHelper();
-    final savedCredentials = await dbHelper.getSavedCredentials();
-    if (savedCredentials != null) {
-      setState(() {
-        email = savedCredentials['email'];
-        password = savedCredentials['password'];
-      });
-    }
+  addTasks() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Add a New Task"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                VxTextField(
+                  controller: titleController,
+                  fillColor: Colors.transparent,
+                  borderColor: MyColors.primaryColor,
+                  borderType: VxTextFieldBorderType.underLine,
+                ),
+                VxTextField(
+                  controller: contentController,
+                  fillColor: Colors.transparent,
+                  borderColor: MyColors.primaryColor,
+                  borderType: VxTextFieldBorderType.underLine,
+                )
+              ],
+            ),
+            actions: [
+              CommonButton(
+                  title: "Add",
+                  onPressed: () {
+                    if (titleController.text.isNotEmpty &&
+                        contentController.text.isNotEmpty) {
+                      final todo = TodoModel(
+                        title: titleController.text,
+                        content: contentController.text,
+                      );
+                      context
+                          .read<TodoBloc>()
+                          .add(CreateTasksEvent(todo: todo));
+                      Navigator.pop(context);
+                    }
+                  }),
+              CommonButton(
+                  title: "Cancel",
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ],
+          );
+        });
   }
 
   @override
@@ -34,25 +67,38 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notes"),
+        actions: const [Icon(Icons.search)],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (email != null && password != null)
-              Text(
-                'Email: $email\nPassword: $password',
-                textAlign: TextAlign.center,
-              ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                await loadSavedCredentials();
+      body: BlocBuilder<TodoBloc, TodoState>(
+        builder: (context, state) {
+          if (state is TodoLoaded) {
+            return ListView.builder(
+              itemCount: state.todos.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Column(
+                    children: [
+                      Text(state.todos[index].title),
+                      Text(state.todos[index].content),
+                      Text(state.todos[index].id as String)
+                    ],
+                  ),
+                );
               },
-              child: const Text('Refresh'),
-            ),
-          ],
-        ),
+            );
+          } else {
+            return Center(
+              child: Container(),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: MyColors.primaryColor,
+        child: const Icon(Icons.add),
+        onPressed: () {
+          addTasks();
+        },
       ),
     );
   }

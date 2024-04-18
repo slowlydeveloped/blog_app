@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:blog_app/data/models/user_model.dart';
-import '/data/data_sources/remote/my_sqlite.dart';
+import '../../../data/data_sources/remote/my_sqlite.dart';
 import 'package:equatable/equatable.dart';
 
 part 'sign_up_event.dart';
