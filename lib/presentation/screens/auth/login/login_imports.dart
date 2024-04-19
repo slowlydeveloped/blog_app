@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import '../../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '/presentation/common_widgets/common_button_imports.dart';
 import '/presentation/routers/router_imports.gr.dart';
@@ -13,6 +14,4 @@ import '../../../../core/constants/my_assets.dart';
 
 part 'login.dart';
 
-part 'login_model.dart';
 
-part 'login_view_model.dart';

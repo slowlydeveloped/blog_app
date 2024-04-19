@@ -8,3 +8,10 @@ sealed class LogoutState extends Equatable {
 }
 
 final class LogoutInitial extends LogoutState {}
+
+class LogoutSuccess extends LogoutState{}
+
+class LogoutFailure extends LogoutState{
+  final String error;
+  const LogoutFailure(this.error);
+}

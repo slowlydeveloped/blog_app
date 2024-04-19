@@ -14,7 +14,7 @@ final class TodoLoading extends TodoState {}
 final class TodoLoaded extends TodoState {
   final List<TodoModel> todos;
 
-  const TodoLoaded(this.todos);
+  const TodoLoaded({required this.todos});
 }
 
 final class TodoDeleted extends TodoState {

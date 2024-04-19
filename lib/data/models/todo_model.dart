@@ -13,14 +13,14 @@ class TodoModel {
     isDone = false,
   });
 
-  factory TodoModel.fromDatabaseJson(Map<String, dynamic> data) => TodoModel(
+  factory TodoModel.fromMap(Map<String, dynamic> data) => TodoModel(
         id: data['id'],
         title: data['title'],
         content: data['content'],
         createdAt: data['createdAt'],
         isDone: data['isDone'] == 0 ? true : false,
       );
-  Map<String, dynamic> toDatabaseJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "title": title,
         "content": content,

@@ -11,6 +11,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _rememberMe = false;
+  bool isLoggedIn = true;
   final _formKey = GlobalKey<FormState>();
   // bool isChecked = false;
   @override
@@ -19,7 +21,7 @@ class _LoginState extends State<Login> {
         backgroundColor: MyColors.primaryColor,
         body: BlocConsumer<SignInBloc, SignInState>(listener: (context, state) {
           if (state is SignInSuccess) {
-            AutoRouter.of(context).push(const HomeScreenRoute());
+            AutoRouter.of(context).replace(const HomeScreenRoute());
           } else if (state is SignInFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message ?? "Login failed")),
@@ -97,19 +99,20 @@ class _LoginState extends State<Login> {
                               },
                             ),
                             10.h.heightBox,
-                            // ListTile(
-                            //   horizontalTitleGap: 2,
-                            //   title: const Text("Remember me"),
-                            //   leading: Checkbox(
-                            //     activeColor: MyColors.primaryColor,
-                            //     value: isChecked,
-                            //     onChanged: (value) {
-                            //       setState(() {
-                            //         isChecked = !isChecked;
-                            //       });
-                            //     },
-                            //   ),
-                            // ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: MyColors.primaryColor,
+                                  value: _rememberMe,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _rememberMe = value!;
+                                    });
+                                  },
+                                ),
+                                "Remember Me".text.make()
+                              ],
+                            ),
                             40.h.heightBox,
                             CommonButton(
                                 title: "Login",
@@ -119,7 +122,7 @@ class _LoginState extends State<Login> {
                                           SignInRequiredEvent(
                                             email: emailController.text,
                                             password: passwordController.text,
-                                            // rememberMe: isChecked
+                                            rememberMe: _rememberMe
                                           ),
                                         );
                                   }

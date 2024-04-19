@@ -56,6 +56,12 @@ abstract class $AppRouter extends _i7.RootStackRouter {
         child: const _i5.Register(),
       );
     },
+    SearchButtonRoute.name: (routeData) {
+      return _i7.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i2.SearchButton(),
+      );
+    },
     SplashRoute.name: (routeData) {
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -131,6 +137,20 @@ class RegisterRoute extends _i7.PageRouteInfo<void> {
         );
 
   static const String name = 'RegisterRoute';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i2.SearchButton]
+class SearchButtonRoute extends _i7.PageRouteInfo<void> {
+  const SearchButtonRoute({List<_i7.PageRouteInfo>? children})
+      : super(
+          SearchButtonRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SearchButtonRoute';
 
   static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
 }

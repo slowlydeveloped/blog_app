@@ -11,7 +11,3 @@ import '../../../common_widgets/common_button_imports.dart';
 import '../../../routers/router_imports.gr.dart';
 
 part 'register.dart';
-
-part 'register_model.dart';
-
-part 'register_view_model.dart';

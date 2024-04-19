@@ -7,22 +7,22 @@ part 'todo_event.dart';
 part 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
-  
   final DataBaseHelper _dataBaseHelper;
-  
+
   TodoBloc({required DataBaseHelper dataBaseHelper})
       : _dataBaseHelper = dataBaseHelper,
         super(TodoInitial()) {
-    
     // Showing all the tasks
 
     on<FetchTasksEvent>((event, emit) async {
       emit(TodoLoading());
       try {
         final todos = await _dataBaseHelper.getTasks();
-        emit(TodoLoaded(todos));
+        print('Fetched todos: $todos');
+        emit(TodoLoaded(todos: todos));
       } catch (e) {
         emit(const TodoError("Failed to load"));
+        print('Error fetching todos: $e');
       }
     });
 
@@ -30,7 +30,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<SearchTasksEvent>((event, emit) async {
       try {
         final todos = await _dataBaseHelper.searchTasks(event.keywords);
-        emit(TodoLoaded(todos));
+        print("doing with");
+        emit(TodoLoaded(todos: todos));
       } catch (e) {
         emit(const TodoError("Failed to Search"));
       }
@@ -39,9 +40,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     //Updating the tasks
     on<UpdateTasksEvent>((event, emit) async {
       try {
-        final todos = await _dataBaseHelper.updateTasks(
-            event.id, event.title, event.content);
-        emit(TodoUpdated(todos));
+        final id = await _dataBaseHelper.updateTasks(
+            event.title, event.content, event.id);
+        final todos = await _dataBaseHelper.getTasks();
+        emit(TodoUpdated(id));
+        print("Updated $id");
+        emit(TodoLoaded(todos: todos));
+        print("Updated $todos");
       } catch (e) {
         emit(const TodoError("Failed to Update"));
       }
@@ -50,8 +55,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     //Deleting the Tasks
     on<DeleteTasksEvent>((event, emit) async {
       try {
-        final todos = await _dataBaseHelper.deleteTasks(event.id);
-        emit(TodoDeleted(todos));
+        await _dataBaseHelper.deleteTasks(event.id);
+        final todos = await _dataBaseHelper.getTasks();
+        emit(TodoDeleted(event.id));
+        emit(TodoLoaded(todos: todos));
       } catch (e) {
         emit(const TodoError("Failed to Delete"));
       }
@@ -61,7 +68,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<CreateTasksEvent>((event, emit) async {
       try {
         final id = await _dataBaseHelper.createTasks(event.todo);
+        print('Createded todos: $id');
+        final todos = await _dataBaseHelper.getTasks();
         emit(TodoCreated(id));
+        emit(TodoLoaded(todos: todos));
       } catch (e) {
         emit(const TodoError("Failed to Create"));
       }

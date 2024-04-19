@@ -1,11 +1,10 @@
 import 'package:blog_app/data/models/todo_model.dart';
 import 'package:blog_app/data/models/user_model.dart';
 import 'package:path/path.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
-  final databaseName = "notes.db";
+  final databaseName = "anuj.db";
   String noteTable =
       "CREATE TABLE notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL, createdAt TEXT DEFAULT CURRENT_TIMESTAMP, isDone INTEGER)";
 
@@ -16,10 +15,7 @@ class DataBaseHelper {
     print('yoooooooooooooooooooooo');
     print(databasePath);
     final path = join(databasePath, databaseName);
-    return openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute(users);
-      await db.execute(noteTable);
-    });
+    return openDatabase(path, version: 1);
   }
 
   Future<bool> login(Users users) async {
@@ -39,55 +35,45 @@ class DataBaseHelper {
     return db.insert('users', users.toMap());
   }
 
-  Future<void> savedCredentials(String email, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('email', email);
-    prefs.setString('password', password);
-  }
-
-  Future<Map<String, dynamic>?> getSavedCredentials() async {
-    final Database db = await initDB();
-    final List<Map<String, dynamic>> result = await db.query('users');
-    if (result.isNotEmpty) {
-      return result.elementAt(1);
-    }
-    return null;
-  }
-
   // Create a new tasks
   Future<int> createTasks(TodoModel todo) async {
     final Database db = await initDB();
-    var result = db.insert('notes', todo.toDatabaseJson());
-    return result;
+    print('Fetched todos: $todo');
+    return db.insert('notes', todo.toMap());
   }
 
   // Delete the tasks with the help of indexing
   Future<int> deleteTasks(int id) async {
     final Database db = await initDB();
-    var results = await db.delete('notes', where: "id = ?", whereArgs: [id]);
-    return results;
+    print("Deleted tasks $db");
+    return db.delete('notes', where: "id = ?", whereArgs: [id]);
   }
 
   // Update the tasks list
-  Future<int> updateTasks(title, content, noteId) async {
+  Future<int> updateTasks(String title, String content, int id) async {
     final Database db = await initDB();
-    return db.rawUpdate(
-        'update notes set title = ?, noteContent = ? where noteId = ?',
-        [title, content, noteId]);
+    print("Updated tasks $db");
+    return db.update('notes', {'title': title, 'content': content},
+        where: "id = ?", whereArgs: [id]);
   }
 
   // Search the notes and task
   Future<List<TodoModel>> searchTasks(String keyword) async {
     final Database db = await initDB();
-    List<Map<String, Object?>> searchResults = await db
-        .rawQuery("select * from notes where title LIKE ?", ["%$keyword%"]);
-    return searchResults.map((e) => TodoModel.fromDatabaseJson(e)).toList();
+    List<Map<String, Object?>> searchResults = await db.query(
+      'notes',
+      where: "title LIKE ?",
+      whereArgs: ["%$keyword%"],
+    );
+    print("searchResults: $searchResults");
+    return searchResults.map((e) => TodoModel.fromMap(e)).toList();
   }
 
-  // Fetching the tasks from database 
+  // Fetching the tasks from database
   Future<List<TodoModel>> getTasks() async {
     final Database db = await initDB();
     List<Map<String, Object?>> result = await db.query('notes');
-    return result.map((e) => TodoModel.fromDatabaseJson(e)).toList();
+    print('Fetched todos: $result');
+    return result.map((e) => TodoModel.fromMap(e)).toList();
   }
 }

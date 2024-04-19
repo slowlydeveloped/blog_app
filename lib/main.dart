@@ -1,4 +1,5 @@
 import 'package:blog_app/data/data_sources/remote/my_sqlite.dart';
+import 'package:blog_app/presentation/blocs/logout_bloc/logout_bloc.dart';
 // import 'package:blog_app/data/repositories/todo_repository.dart';
 import 'package:blog_app/presentation/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:blog_app/presentation/blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
               create: (_) => SignUpBloc(DataBaseHelper()),
             ),
             BlocProvider<TodoBloc>(
-                create: (_) => TodoBloc(dataBaseHelper: dataBaseHelper))
+                create: (_) => TodoBloc(dataBaseHelper: dataBaseHelper)),
+            BlocProvider<LogoutBloc>(create: (context)=> LogoutBloc())
           ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
