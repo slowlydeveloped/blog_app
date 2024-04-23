@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
               create: (_) => SignUpBloc(DataBaseHelper()),
             ),
             BlocProvider<TodoBloc>(
-                create: (_) => TodoBloc(dataBaseHelper: dataBaseHelper)),
+                create: (context) => TodoBloc(dataBaseHelper: dataBaseHelper)),
             BlocProvider<LogoutBloc>(create: (context)=> LogoutBloc())
           ],
           child: MaterialApp.router(

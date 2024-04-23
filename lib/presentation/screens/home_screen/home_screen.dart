@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final databasehelper = DataBaseHelper();
   final titleController = TextEditingController();
   final contentController = TextEditingController();
-  final keywordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +221,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 8),
               GestureDetector(
                   onTap: () {
-                    // Handle update task action
                     editTasks(context, todo);
                   },
                   child: const Icon(Icons.edit)),

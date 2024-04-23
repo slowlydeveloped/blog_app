@@ -17,6 +17,12 @@ final class TodoLoaded extends TodoState {
   const TodoLoaded({required this.todos});
 }
 
+final class TodoSearched extends TodoState {
+  final List<TodoModel> tasks;
+
+  const TodoSearched({required this.tasks});
+}
+
 final class TodoDeleted extends TodoState {
   final int id;
   const TodoDeleted(this.id);

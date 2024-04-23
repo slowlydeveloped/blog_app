@@ -6,20 +6,23 @@ class TodoModel {
   final bool isDone = false;
 
   TodoModel({
-     this.id,
+    this.id,
     required this.title,
     required this.content,
-     this.createdAt,
+    this.createdAt,
     isDone = false,
   });
 
-  factory TodoModel.fromMap(Map<String, dynamic> data) => TodoModel(
-        id: data['id'],
-        title: data['title'],
-        content: data['content'],
-        createdAt: data['createdAt'],
-        isDone: data['isDone'] == 0 ? true : false,
-      );
+  factory TodoModel.fromMap(Map<String, dynamic> data) {
+    return TodoModel(
+      id: data['id'],
+      title: data['title'],
+      content: data['content'],
+      createdAt: data['createdAt'],
+      isDone: data['isDone'] == 1,
+    );
+  }
+
   Map<String, dynamic> toMap() => {
         "id": id,
         "title": title,

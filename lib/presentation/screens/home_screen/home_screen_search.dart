@@ -5,11 +5,12 @@ class SearchButton extends StatefulWidget {
   const SearchButton({super.key});
 
   @override
-  _SearchButtonState createState() => _SearchButtonState();
+  State<SearchButton> createState() => _SearchButtonState();
 }
 
 class _SearchButtonState extends State<SearchButton> {
   final searchController = TextEditingController();
+  String keyword = '';
 
   @override
   Widget build(BuildContext context) {
@@ -22,27 +23,23 @@ class _SearchButtonState extends State<SearchButton> {
               controller: searchController,
               hint: "Search...",
               fillColor: Colors.transparent,
-              borderColor: Colors.blue, // Adjust color as needed
+              borderColor: MyColors.primaryColor,
               borderType: VxTextFieldBorderType.underLine,
               onChanged: (query) {
-                context.read<TodoBloc>().add(SearchTasksEvent(query));
+                 keyword = query;
+                context.read<TodoBloc>().add(SearchTasksEvent(keyword));
               },
             ),
             Expanded(
               child: BlocBuilder<TodoBloc, TodoState>(
                 builder: (context, state) {
-                  if (state is TodoLoaded) {
-                    final List<TodoModel> filteredTodos = state.todos
-                      .where((todo) =>
-                          todo.title.toLowerCase().contains(searchController.text.toLowerCase()) ||
-                          todo.content.toLowerCase().contains(searchController.text.toLowerCase()))
-                      .toList();
+                  if (state is TodoSearched) { 
                     return ListView.builder(
-                      itemCount: filteredTodos.length,
+                      itemCount: state.tasks.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(filteredTodos[index].title),
-                          subtitle: Text(filteredTodos[index].content),
+                          title: Text(state.tasks[index].title),
+                          subtitle: Text(state.tasks[index].content),
                         );
                       },
                     );

@@ -60,13 +60,14 @@ class DataBaseHelper {
   // Search the notes and task
   Future<List<TodoModel>> searchTasks(String keyword) async {
     final Database db = await initDB();
-    List<Map<String, Object?>> searchResults = await db.query(
+    List<Map<String, dynamic>> searchResults = await db.query(
       'notes',
       where: "title LIKE ?",
-      whereArgs: ["%$keyword%"],
+      whereArgs: ['%$keyword%'],
     );
     print("searchResults: $searchResults");
-    return searchResults.map((e) => TodoModel.fromMap(e)).toList();
+    List<TodoModel> tasks = searchResults.map((task) => TodoModel.fromMap(task)).toList();
+    return tasks;
   }
 
   // Fetching the tasks from database
